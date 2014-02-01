@@ -25,7 +25,7 @@
 
 #define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.25f]
 #define kEnabledBorderColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
-#define kDisabledBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:0.f]
+#define kDisabledBackgroundColor [NSColor clearColor]
 #define kEnabledBackgroundColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 
 
@@ -96,6 +96,7 @@
     _backgroundLayer.bounds = _rootLayer.bounds;
     _backgroundLayer.anchorPoint = (CGPoint){ .x = 0.f, .y = 0.f };
     _backgroundLayer.borderWidth = kBorderLineWidth;
+    _backgroundLayer.masksToBounds = YES;
     [_rootLayer addSublayer:_backgroundLayer];
     
     // Knob layer
@@ -136,9 +137,8 @@
     [super setFrame:frameRect];
     
     [CATransaction begin];
+    [CATransaction setDisableActions:YES];
     {
-        [CATransaction setDisableActions:YES];
-        
         self.knobLayer.frame = [self rectForKnob];
     }
     [CATransaction commit];
@@ -154,6 +154,11 @@
     [CATransaction begin];
     [CATransaction setAnimationDuration:kAnimationDuration];
     {
+        // ------------------------------- Animate Border
+        // The green part also animates, which looks kinda weird
+        // I'll leave this for now
+        // _backgroundLayer.borderWidth = (self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
+        
         // ------------------------------- Animate Colors
         if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
             _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
@@ -162,9 +167,6 @@
             _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
             _backgroundLayer.backgroundColor = kDisabledBackgroundColor.CGColor;
         }
-        
-        // ------------------------------- Animate Border
-        _backgroundLayer.borderWidth = (self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Frame
         [CATransaction begin];
