@@ -95,8 +95,6 @@
     _backgroundLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
     _backgroundLayer.bounds = _rootLayer.bounds;
     _backgroundLayer.anchorPoint = (CGPoint){ .x = 0.f, .y = 0.f };
-    _backgroundLayer.borderWidth = kBorderLineWidth;
-    _backgroundLayer.masksToBounds = YES;
     [_rootLayer addSublayer:_backgroundLayer];
     
     // Knob layer
@@ -115,7 +113,6 @@
     // Initial
     [self updateLayer];
 }
-
 
 
 // ----------------------------------------------------
@@ -156,16 +153,16 @@
     {
         // ------------------------------- Animate Border
         // The green part also animates, which looks kinda weird
-        // I'll leave this for now
-        // _backgroundLayer.borderWidth = (self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
+        // We'll use the background-color for now
+//        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
         if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
-            _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
-            _backgroundLayer.backgroundColor = kEnabledBackgroundColor.CGColor;
+//            _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
+            _backgroundLayer.backgroundColor = kEnabledBorderColor.CGColor;
         } else {
-            _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
-            _backgroundLayer.backgroundColor = kDisabledBackgroundColor.CGColor;
+//            _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
+            _backgroundLayer.backgroundColor = kDisabledBorderColor.CGColor;
         }
         
         // ------------------------------- Animate Frame
@@ -184,8 +181,13 @@
     [CATransaction commit];
 }
 
+- (CGFloat)knobHeightForSize:(NSSize)size
+{
+    return size.height - (kBorderLineWidth * 2.f);
+}
+
 - (CGRect)rectForKnob {
-    CGFloat height = NSHeight(_backgroundLayer.bounds) - (kBorderLineWidth * 2.f);
+    CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
     CGFloat width = !self.isActive ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
                                      (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
     CGFloat x = ((!self.hasDragged && !self.isOn) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
@@ -199,7 +201,6 @@
         .origin.y = kBorderLineWidth,
     };
 }
-
 
 
 // ----------------------------------------------------
@@ -227,10 +228,11 @@
     if (!self.hasDragged) self.isOn = !self.isOn;
     else self.isOn = self.isDraggingTowardsOn;
     
-    [self updateLayer];
-    
+    // Reset
     self.hasDragged = NO;
     self.isDraggingTowardsOn = NO;
+    
+    [self updateLayer];
 }
 
 
