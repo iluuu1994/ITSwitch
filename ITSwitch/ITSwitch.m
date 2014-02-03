@@ -95,6 +95,7 @@
     _backgroundLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
     _backgroundLayer.bounds = _rootLayer.bounds;
     _backgroundLayer.anchorPoint = (CGPoint){ .x = 0.f, .y = 0.f };
+    _backgroundLayer.borderWidth = kBorderLineWidth;
     [_rootLayer addSublayer:_backgroundLayer];
     
     // Knob layer
@@ -158,11 +159,11 @@
         
         // ------------------------------- Animate Colors
         if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
-//            _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
-            _backgroundLayer.backgroundColor = kEnabledBorderColor.CGColor;
+            _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
+            _backgroundLayer.backgroundColor = kEnabledBackgroundColor.CGColor;
         } else {
-//            _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
-            _backgroundLayer.backgroundColor = kDisabledBorderColor.CGColor;
+            _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
+            _backgroundLayer.backgroundColor = kDisabledBackgroundColor.CGColor;
         }
         
         // ------------------------------- Animate Frame

@@ -656,7 +656,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="0QQ-Rg-pWh" customClass="ITSwitch">
-                        <rect key="frame" x="20" y="42" width="50" height="30"/>
+                        <rect key="frame" x="29" y="52" width="32" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <connections>
                             <action selector="switchChanged:" target="494" id="mqT-HI-dN0"/>
@@ -675,12 +675,12 @@
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" id="2IW-L6-4T0"/>
+                    <constraint firstItem="lp0-KM-Ljo" firstAttribute="top" secondItem="0QQ-Rg-pWh" secondAttribute="bottom" constant="18" id="FPQ-dA-Dje"/>
                     <constraint firstAttribute="bottom" secondItem="lp0-KM-Ljo" secondAttribute="bottom" constant="20" id="RBn-iQ-vx5"/>
                     <constraint firstItem="lp0-KM-Ljo" firstAttribute="centerX" secondItem="0QQ-Rg-pWh" secondAttribute="centerX" constant="0.5" id="WqD-NY-08d"/>
+                    <constraint firstAttribute="trailing" secondItem="0QQ-Rg-pWh" secondAttribute="trailing" constant="29" id="dws-s2-ERl"/>
+                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="29" id="g02-OF-PqK"/>
                     <constraint firstItem="0QQ-Rg-pWh" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="gKJ-hL-51s"/>
-                    <constraint firstAttribute="trailing" secondItem="0QQ-Rg-pWh" secondAttribute="trailing" constant="20" id="hDP-fd-abc"/>
-                    <constraint firstItem="lp0-KM-Ljo" firstAttribute="top" secondItem="0QQ-Rg-pWh" secondAttribute="bottom" constant="8" id="m9h-v3-FhQ"/>
                 </constraints>
             </view>
         </window>
