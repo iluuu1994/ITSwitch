@@ -46,6 +46,7 @@
 @property (readonly, strong) CALayer *rootLayer;
 @property (readonly, strong) CALayer *backgroundLayer;
 @property (readonly, strong) CALayer *knobLayer;
+@property (readonly, strong) CALayer *knobInsideLayer;
 
 @end
 
@@ -103,13 +104,21 @@
     _knobLayer.frame = [self rectForKnob];
     _knobLayer.autoresizingMask = kCALayerHeightSizable;
     _knobLayer.backgroundColor = kKnobBackgroundColor.CGColor;
-    _knobLayer.borderColor = [NSColor colorWithDeviceWhite:0.f alpha:0.15f].CGColor;
-    _knobLayer.borderWidth = .5f;
     _knobLayer.shadowColor = [NSColor blackColor].CGColor;
     _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
     _knobLayer.shadowRadius = 1.f;
     _knobLayer.shadowOpacity = 0.3f;
     [_rootLayer addSublayer:_knobLayer];
+    
+    _knobInsideLayer = [CALayer layer];
+    _knobInsideLayer.frame = _knobLayer.bounds;
+    _knobInsideLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+    _knobInsideLayer.shadowColor = [NSColor blackColor].CGColor;
+    _knobInsideLayer.shadowOffset = (CGSize){ .width = 0.f, .height = 0.f };
+    _knobInsideLayer.backgroundColor = [NSColor whiteColor].CGColor;
+    _knobInsideLayer.shadowRadius = 1.f;
+    _knobInsideLayer.shadowOpacity = 0.2f;
+    [_knobLayer addSublayer:_knobInsideLayer];
     
     // Initial
     [self updateLayer];
@@ -131,6 +140,7 @@
         
         [_backgroundLayer setCornerRadius:_backgroundLayer.bounds.size.height / 2.f];
         [_knobLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
+        [_knobInsideLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
     }
     [CATransaction commit];
 }
@@ -142,6 +152,7 @@
     [CATransaction setDisableActions:YES];
     {
         self.knobLayer.frame = [self rectForKnob];
+        self.knobInsideLayer.frame = self.knobLayer.bounds;
     }
     [CATransaction commit];
 }
@@ -180,6 +191,7 @@
             }
             
             self.knobLayer.frame = [self rectForKnob];
+            self.knobInsideLayer.frame = self.knobLayer.bounds;
         }
         [CATransaction commit];
     }
