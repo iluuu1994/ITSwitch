@@ -120,6 +120,10 @@
 #pragma mark - NSView
 // ----------------------------------------------------
 
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
+    return YES;
+}
+
 - (void)layoutSublayersOfLayer:(CALayer *)layer {
     [CATransaction begin];
     {
@@ -207,6 +211,10 @@
 // ----------------------------------------------------
 #pragma mark - NSResponder
 // ----------------------------------------------------
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
 
 - (void)mouseDown:(NSEvent *)theEvent {
     self.isActive = YES;
