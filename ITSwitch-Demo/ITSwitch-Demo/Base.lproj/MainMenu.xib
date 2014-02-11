@@ -649,38 +649,25 @@
         <window title="ITSwitch-Demo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="90" height="92"/>
+            <rect key="contentRect" x="335" y="390" width="72" height="60"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" wantsLayer="YES" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="90" height="92"/>
+                <rect key="frame" x="0.0" y="0.0" width="72" height="60"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="0QQ-Rg-pWh" customClass="ITSwitch">
-                        <rect key="frame" x="29" y="52" width="32" height="20"/>
+                        <rect key="frame" x="20" y="20" width="32" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <connections>
                             <action selector="switchChanged:" target="494" id="mqT-HI-dN0"/>
                         </connections>
                     </customView>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="lp0-KM-Ljo">
-                        <rect key="frame" x="25" y="18" width="41" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="On" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dMd-wc-yjn">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="checkboxChanged:" target="494" id="VaZ-b5-f3q"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="lp0-KM-Ljo" firstAttribute="top" secondItem="0QQ-Rg-pWh" secondAttribute="bottom" constant="18" id="FPQ-dA-Dje"/>
-                    <constraint firstAttribute="bottom" secondItem="lp0-KM-Ljo" secondAttribute="bottom" constant="20" id="RBn-iQ-vx5"/>
-                    <constraint firstItem="lp0-KM-Ljo" firstAttribute="centerX" secondItem="0QQ-Rg-pWh" secondAttribute="centerX" constant="0.5" id="WqD-NY-08d"/>
-                    <constraint firstAttribute="trailing" secondItem="0QQ-Rg-pWh" secondAttribute="trailing" constant="29" id="dws-s2-ERl"/>
-                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="29" id="g02-OF-PqK"/>
-                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="gKJ-hL-51s"/>
+                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" id="8Xt-zt-vAZ"/>
+                    <constraint firstAttribute="bottom" secondItem="0QQ-Rg-pWh" secondAttribute="bottom" constant="20" id="NN1-bB-QhN"/>
+                    <constraint firstItem="0QQ-Rg-pWh" firstAttribute="top" secondItem="372" secondAttribute="top" constant="20" id="t4h-wg-vcC"/>
+                    <constraint firstAttribute="trailing" secondItem="0QQ-Rg-pWh" secondAttribute="trailing" constant="20" id="yp7-21-pDS"/>
                 </constraints>
             </view>
         </window>

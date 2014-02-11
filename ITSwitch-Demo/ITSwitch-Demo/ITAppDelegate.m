@@ -19,8 +19,4 @@
     NSLog(@"Slider is %@", itSwitch.isOn ? @"enabled" : @"disabled");
 }
 
-- (IBAction)checkboxChanged:(NSButton *)checkbox {
-    self.itSwitch.isOn = (checkbox.state == NSOnState);
-}
-
 @end

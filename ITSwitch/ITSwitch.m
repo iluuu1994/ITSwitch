@@ -265,7 +265,11 @@
 
 - (void)setOn:(BOOL)isOn {
     if (_isOn != isOn) {
-        _isOn = isOn;
+        [self willChangeValueForKey:@"isOn"];
+        {
+            _isOn = isOn;
+        }
+        [self didChangeValueForKey:@"isOn"];
 
         if (self.target && self.action) {
             NSMethodSignature *signature = [[self.target class] instanceMethodSignatureForSelector:self.action];
@@ -276,9 +280,9 @@
             
             [invocation invoke];
         }
-        
-        [self updateLayer];
     }
+    
+    [self updateLayer];
 }
 
 @end
