@@ -11,5 +11,6 @@
 @interface ITSwitch : NSControl
 
 @property (nonatomic, setter = setOn:) BOOL isOn;
+@property (nonatomic, strong) NSColor *tintColor;
 
 @end

@@ -23,10 +23,9 @@
 
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
-#define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.25f]
-#define kEnabledBorderColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
+#define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor [NSColor clearColor]
-#define kEnabledBackgroundColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
+#define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 
 
 
@@ -35,7 +34,7 @@
 // ---------------------------------------------------------------------------------------
 
 @interface ITSwitch () {
-    id _target;
+    __weak id _target;
     SEL _action;
 }
 
@@ -57,6 +56,7 @@
 // ---------------------------------------------------------------------------------------
 
 @implementation ITSwitch
+@synthesize tintColor = _tintColor;
 
 // ----------------------------------------------------
 #pragma mark - Init
@@ -74,9 +74,9 @@
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
     if (!self) return nil;
-
+    
     [self setUp];
-        
+    
     return self;
 }
 
@@ -117,7 +117,7 @@
     _knobInsideLayer.shadowOffset = (CGSize){ .width = 0.f, .height = 0.f };
     _knobInsideLayer.backgroundColor = [NSColor whiteColor].CGColor;
     _knobInsideLayer.shadowRadius = 1.f;
-    _knobInsideLayer.shadowOpacity = 0.2f;
+    _knobInsideLayer.shadowOpacity = 0.35f;
     [_knobLayer addSublayer:_knobInsideLayer];
     
     // Initial
@@ -170,12 +170,12 @@
         // ------------------------------- Animate Border
         // The green part also animates, which looks kinda weird
         // We'll use the background-color for now
-//        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
+        //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
         if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
-            _backgroundLayer.borderColor = kEnabledBorderColor.CGColor;
-            _backgroundLayer.backgroundColor = kEnabledBackgroundColor.CGColor;
+            _backgroundLayer.borderColor = self.tintColor.CGColor;
+            _backgroundLayer.backgroundColor = self.tintColor.CGColor;
         } else {
             _backgroundLayer.borderColor = kDisabledBorderColor.CGColor;
             _backgroundLayer.backgroundColor = kDisabledBackgroundColor.CGColor;
@@ -206,10 +206,10 @@
 - (CGRect)rectForKnob {
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
     CGFloat width = !self.isActive ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
-                                     (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
+    (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
     CGFloat x = ((!self.hasDragged && !self.isOn) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
-        kBorderLineWidth :
-        NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
+    kBorderLineWidth :
+    NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
     return (CGRect) {
         .size.width = width,
@@ -290,7 +290,7 @@
             _isOn = isOn;
         }
         [self didChangeValueForKey:@"isOn"];
-
+        
         if (self.target && self.action) {
             NSMethodSignature *signature = [[self.target class] instanceMethodSignatureForSelector:self.action];
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -303,6 +303,17 @@
     }
     
     [self updateLayer];
+}
+
+- (NSColor *)tintColor {
+    if (!_tintColor) return kDefaultTintColor;
+    
+    return _tintColor;
+}
+
+- (void)setTintColor:(NSColor *)tintColor {
+    _tintColor = tintColor;
+    [self setNeedsDisplay:YES];
 }
 
 @end
