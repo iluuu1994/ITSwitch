@@ -16,7 +16,7 @@
 }
 
 - (IBAction)switchChanged:(ITSwitch *)itSwitch {
-    NSLog(@"Slider is %@", itSwitch.isOn ? @"enabled" : @"disabled");
+    NSLog(@"Switch (%@) is %@", itSwitch, itSwitch.isOn ? @"enabled" : @"disabled");
 }
 
 @end
