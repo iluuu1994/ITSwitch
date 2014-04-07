@@ -1,7 +1,7 @@
 ITSwitch
 ========
 
-`ITSwitch` is a simple and lightweight replica of iOS 7 `UISwitch`.
+`ITSwitch` is a simple and lightweight replica of iOS 7 `UISwitch` for Mac OS X.
 
 ![](./demo.png)
 
