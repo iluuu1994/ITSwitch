@@ -19,6 +19,10 @@ Additionally, you can use those to properties:
 @property (nonatomic, strong) NSColor *tintColor;
 ```
 
+Since `ITSwitch` uses it's `CALayer` to draw a drop-shadow, you should also layer-back it's superview.
+If you don't use Core Animation, you can also simply embedd the view in a layer-backed view.
+
+
 Tips
 ----
 
