@@ -246,8 +246,11 @@
 - (void)mouseUp:(NSEvent *)theEvent {
     self.isActive = NO;
     
-    if (!self.hasDragged) self.isOn = !self.isOn;
-    else self.isOn = self.isDraggingTowardsOn;
+    BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
+    BOOL invokeTargetAction = (isOn != _isOn);
+    
+    self.isOn = isOn;
+    if (invokeTargetAction) [self _invokeTargetAction];
     
     // Reset
     self.hasDragged = NO;
@@ -291,15 +294,7 @@
         }
         [self didChangeValueForKey:@"isOn"];
         
-        if (self.target && self.action) {
-            NSMethodSignature *signature = [[self.target class] instanceMethodSignatureForSelector:self.action];
-            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-            [invocation setTarget:self.target];
-            [invocation setSelector:self.action];
-            [invocation setArgument:(void *)&self atIndex:2];
-            
-            [invocation invoke];
-        }
+        
     }
     
     [self updateLayer];
@@ -315,5 +310,24 @@
     _tintColor = tintColor;
     [self setNeedsDisplay:YES];
 }
+
+
+
+// -----------------------------------
+#pragma mark - Helpers
+// -----------------------------------
+
+- (void)_invokeTargetAction {
+    if (self.target && self.action) {
+        NSMethodSignature *signature = [[self.target class] instanceMethodSignatureForSelector:self.action];
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+        [invocation setTarget:self.target];
+        [invocation setSelector:self.action];
+        [invocation setArgument:(void *)&self atIndex:2];
+        
+        [invocation invoke];
+    }
+}
+
 
 @end
