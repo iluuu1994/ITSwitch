@@ -12,21 +12,21 @@ Not much to it, simply set the custom class of a `NSView` to `ITSwitch` in Inter
 
 You can create an IBAction and simply connect the two in Interface Builder.
 
-Additionally, you can use those to properties:
+Additionally, you can use these two properties:
 
 ```objc
 @property (nonatomic, setter = setOn:) BOOL isOn;
 @property (nonatomic, strong) NSColor *tintColor;
 ```
 
-Since `ITSwitch` uses it's `CALayer` to draw a drop-shadow, you should also layer-back it's superview.
-If you don't use Core Animation, you can also simply embedd the view in a layer-backed view.
+Since `ITSwitch` uses its `CALayer` to draw a drop-shadow, you should also layer-back it's superview.
+If you don't use Core Animation, you can also simply embed the view in a layer-backed view.
 
 
 Tips
 ----
 
-You may want to consider setting the width of the view to the golden ration * height. 
+You may want to consider setting the width of the view to the golden ratio * height. 
 
 So for example:
 
