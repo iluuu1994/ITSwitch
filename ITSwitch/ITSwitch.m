@@ -268,16 +268,24 @@
     return _target;
 }
 
-- (void)setTarget:(id)anObject {
-    _target = anObject;
+- (void)setTarget:(id)target {
+    [self willChangeValueForKey:@"target"];
+    {
+        _target = target;
+    }
+    [self didChangeValueForKey:@"target"];
 }
 
 - (SEL)action {
     return _action;
 }
 
-- (void)setAction:(SEL)aSelector {
-    _action = aSelector;
+- (void)setAction:(SEL)action {
+    [self willChangeValueForKey:@"action"];
+    {
+        _action = action;
+    }
+    [self didChangeValueForKey:@"action"];
 }
 
 
@@ -293,8 +301,6 @@
             _isOn = isOn;
         }
         [self didChangeValueForKey:@"isOn"];
-        
-        
     }
     
     [self updateLayer];
@@ -307,7 +313,12 @@
 }
 
 - (void)setTintColor:(NSColor *)tintColor {
-    _tintColor = tintColor;
+    [self willChangeValueForKey:@"tintColor"];
+    {
+        _tintColor = tintColor;
+    }
+    [self didChangeValueForKey:@"tintColor"];
+    
     [self updateLayer];
 }
 
