@@ -308,7 +308,7 @@
 
 - (void)setTintColor:(NSColor *)tintColor {
     _tintColor = tintColor;
-    [self setNeedsDisplay:YES];
+    [self updateLayer];
 }
 
 
