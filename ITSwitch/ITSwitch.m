@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
+
 // ----------------------------------------------------
 #pragma mark - Preprocessor
 // ----------------------------------------------------
@@ -27,9 +28,15 @@
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 
+
+
 // ---------------------------------------------------------------------------------------
-#pragma mark - Additions for 10.7 support
+#pragma mark - NSColor Addition for OS X <= 10.7 support
 // ---------------------------------------------------------------------------------------
+
+@interface NSColor (ITSwitchCGColor)
+@property (nonatomic, readonly) CGColorRef it_CGColor;
+@end
 
 @implementation NSColor (ITSwitchCGColor)
 
@@ -44,6 +51,8 @@
 }
 
 @end
+
+
 
 // ---------------------------------------------------------------------------------------
 #pragma mark - Interface Extension
@@ -73,6 +82,8 @@
 
 @implementation ITSwitch
 @synthesize tintColor = _tintColor;
+
+
 
 // ----------------------------------------------------
 #pragma mark - Init
@@ -139,6 +150,7 @@
     // Initial
     [self updateLayer];
 }
+
 
 
 // ----------------------------------------------------
@@ -236,6 +248,7 @@
 }
 
 
+
 // ----------------------------------------------------
 #pragma mark - NSResponder
 // ----------------------------------------------------
@@ -274,6 +287,7 @@
     
     [self updateLayer];
 }
+
 
 
 // ----------------------------------------------------
