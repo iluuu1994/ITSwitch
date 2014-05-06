@@ -27,7 +27,23 @@
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 
+// ---------------------------------------------------------------------------------------
+#pragma mark - Additions for 10.7 support
+// ---------------------------------------------------------------------------------------
 
+@implementation NSColor (ITSwitchCGColor)
+
+- (CGColorRef)it_CGColor {
+    const NSInteger numberOfComponents = [self numberOfComponents];
+    CGFloat components[numberOfComponents];
+    CGColorSpaceRef colorSpace = [[self colorSpace] CGColorSpace];
+    
+    [self getComponents:(CGFloat *)&components];
+    
+    return CGColorCreate(colorSpace, components);
+}
+
+@end
 
 // ---------------------------------------------------------------------------------------
 #pragma mark - Interface Extension
@@ -340,25 +356,5 @@
     }
 }
 
-
-@end
-
-#pragma mark - Additions for 10.7 support
-
-@interface NSColor (ITSwitchCGColor)
-- (CGColorRef)it_CGColor;
-@end
-
-@implementation NSColor (ITSwitchCGColor)
-
-- (CGColorRef)it_CGColor {
-    const NSInteger numberOfComponents = [self numberOfComponents];
-    CGFloat components[numberOfComponents];
-    CGColorSpaceRef colorSpace = [[self colorSpace] CGColorSpace];
-    
-    [self getComponents:(CGFloat *)&components];
-    
-    return CGColorCreate(colorSpace, components);
-}
 
 @end
