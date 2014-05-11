@@ -23,4 +23,9 @@
  */
 @property (nonatomic, strong) NSColor *tintColor;
 
+/**
+ *  @property enabled - Gets or sets whether the switch is disabled or not
+ */
+@property (nonatomic, setter = setEnabled:, getter = isEnabled) BOOL enabled;
+
 @end
