@@ -22,6 +22,9 @@
 #define kGoldenRatio 1.61803398875f
 #define kDecreasedGoldenRatio 1.38
 
+#define kEnabledOpacity 1.f
+#define kDisabledOpacity 0.5f
+
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
 #define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
@@ -109,16 +112,19 @@
 }
 
 - (void)setUp {
+    // The Switch is enabled per default
     self.enabled = YES;
-    self.wantsLayer = YES;
+    
+    // Set up the layer hierarchy
     [self setUpLayers];
 }
 
 - (void)setUpLayers {
     // Root layer
     _rootLayer = [CALayer layer];
-    _rootLayer.delegate = self;
+    //_rootLayer.delegate = self;
     self.layer = _rootLayer;
+    self.wantsLayer = YES;
     
     // Background layer
     _backgroundLayer = [CALayer layer];
@@ -150,7 +156,8 @@
     [_knobLayer addSublayer:_knobInsideLayer];
     
     // Initial
-    [self updateLayer];
+    [self reloadLayerSize];
+    [self reloadLayer];
 }
 
 
@@ -163,28 +170,10 @@
     return YES;
 }
 
-- (void)layoutSublayersOfLayer:(CALayer *)layer {
-    [CATransaction begin];
-    {
-        [CATransaction setDisableActions:YES];
-        
-        [_backgroundLayer setCornerRadius:_backgroundLayer.bounds.size.height / 2.f];
-        [_knobLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
-        [_knobInsideLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
-    }
-    [CATransaction commit];
-}
-
 - (void)setFrame:(NSRect)frameRect {
     [super setFrame:frameRect];
     
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    {
-        self.knobLayer.frame = [self rectForKnob];
-        self.knobInsideLayer.frame = self.knobLayer.bounds;
-    }
-    [CATransaction commit];
+    [self reloadLayerSize];
 }
 
 
@@ -193,7 +182,7 @@
 #pragma mark - Update Layer
 // ----------------------------------------------------
 
-- (void)updateLayer {
+- (void)reloadLayer {
     [CATransaction begin];
     [CATransaction setAnimationDuration:kAnimationDuration];
     {
@@ -203,10 +192,7 @@
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if (!self.enabled) {
-            _backgroundLayer.borderColor = [kDisabledBorderColor it_CGColor];
-            _backgroundLayer.backgroundColor = [kInactiveBackgroundColor it_CGColor];
-        } else if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
+        if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
             _backgroundLayer.borderColor = [self.tintColor it_CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor it_CGColor];
         } else {
@@ -214,19 +200,31 @@
             _backgroundLayer.backgroundColor = [kDisabledBackgroundColor it_CGColor];
         }
         
+        // ------------------------------- Animate Enabled-Disabled state
+        _rootLayer.opacity = (self.isEnabled) ? kEnabledOpacity : kDisabledOpacity;
+
         // ------------------------------- Animate Frame
-        [CATransaction begin];
-        [CATransaction setAnimationDuration:kAnimationDuration];
-        {
-            if (!self.hasDragged) {
-                CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
-                [CATransaction setAnimationTimingFunction:function];
-            }
-            
-            self.knobLayer.frame = [self rectForKnob];
-            self.knobInsideLayer.frame = self.knobLayer.bounds;
+        if (!self.hasDragged) {
+            CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
+            [CATransaction setAnimationTimingFunction:function];
         }
-        [CATransaction commit];
+        
+        self.knobLayer.frame = [self rectForKnob];
+        self.knobInsideLayer.frame = self.knobLayer.bounds;
+    }
+    [CATransaction commit];
+}
+
+- (void)reloadLayerSize {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    {
+        self.knobLayer.frame = [self rectForKnob];
+        self.knobInsideLayer.frame = self.knobLayer.bounds;
+        
+        [_backgroundLayer setCornerRadius:_backgroundLayer.bounds.size.height / 2.f];
+        [_knobLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
+        [_knobInsideLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
     }
     [CATransaction commit];
 }
@@ -267,7 +265,7 @@
 
     self.isActive = YES;
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
@@ -278,7 +276,7 @@
     NSPoint draggingPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     self.isDraggingTowardsOn = draggingPoint.x >= NSWidth(self.bounds) / 2.f;
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
@@ -296,7 +294,7 @@
     self.hasDragged = NO;
     self.isDraggingTowardsOn = NO;
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 
@@ -344,7 +342,7 @@
         [self didChangeValueForKey:@"isOn"];
     }
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 - (NSColor *)tintColor {
@@ -360,13 +358,17 @@
     }
     [self didChangeValueForKey:@"tintColor"];
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 - (void)setEnabled:(BOOL)enabled {
-    _enabled = enabled;
+    [self willChangeValueForKey:@"enabled"];
+    {
+        _enabled = enabled;
+    }
+    [self didChangeValueForKey:@"enabled"];
     
-    [self updateLayer];
+    [self reloadLayer];
 }
 
 // -----------------------------------
