@@ -27,6 +27,7 @@
 #define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
+#define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0 alpha:0.3]
 
 
 
@@ -108,6 +109,7 @@
 }
 
 - (void)setUp {
+    self.enabled = YES;
     self.wantsLayer = YES;
     [self setUpLayers];
 }
@@ -201,7 +203,10 @@
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
+        if (!self.enabled) {
+            _backgroundLayer.borderColor = [kDisabledBorderColor it_CGColor];
+            _backgroundLayer.backgroundColor = [kInactiveBackgroundColor it_CGColor];
+        } else if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
             _backgroundLayer.borderColor = [self.tintColor it_CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor it_CGColor];
         } else {
@@ -258,12 +263,16 @@
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
+    if (!self.enabled) return;
+
     self.isActive = YES;
     
     [self updateLayer];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
+    if (!self.enabled) return;
+
     self.hasDragged = YES;
     
     NSPoint draggingPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -273,6 +282,8 @@
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
+    if (!self.enabled) return;
+
     self.isActive = NO;
     
     BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
@@ -352,7 +363,11 @@
     [self updateLayer];
 }
 
-
+- (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
+    
+    [self updateLayer];
+}
 
 // -----------------------------------
 #pragma mark - Helpers
