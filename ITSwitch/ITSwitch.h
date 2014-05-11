@@ -23,4 +23,9 @@
  */
 @property (nonatomic, strong) NSColor *tintColor;
 
+/**
+ *  @property enabled - Gets or sets whether the switch is disabled or not. A disabled switch would be greyed out and won't respond to clicks.
+ */
+@property (nonatomic, setter = setEnabled:, getter = isEnabled) BOOL enabled;
+
 @end
