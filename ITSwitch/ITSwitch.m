@@ -308,11 +308,7 @@
 }
 
 - (void)setTarget:(id)target {
-    [self willChangeValueForKey:@"target"];
-    {
-        _target = target;
-    }
-    [self didChangeValueForKey:@"target"];
+    _target = target;
 }
 
 - (SEL)action {
@@ -320,11 +316,7 @@
 }
 
 - (void)setAction:(SEL)action {
-    [self willChangeValueForKey:@"action"];
-    {
-        _action = action;
-    }
-    [self didChangeValueForKey:@"action"];
+    _action = action;
 }
 
 
@@ -352,11 +344,7 @@
 }
 
 - (void)setTintColor:(NSColor *)tintColor {
-    [self willChangeValueForKey:@"tintColor"];
-    {
-        _tintColor = tintColor;
-    }
-    [self didChangeValueForKey:@"tintColor"];
+    _tintColor = tintColor;
     
     [self reloadLayer];
 }
