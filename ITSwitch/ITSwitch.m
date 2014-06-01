@@ -51,7 +51,10 @@
     
     [self getComponents:(CGFloat *)&components];
     
-    return CGColorCreate(colorSpace, components);
+    CGColorRef result = CGColorCreate(colorSpace, components);
+    CFAutorelease(result);
+    
+    return result;
 }
 
 @end
