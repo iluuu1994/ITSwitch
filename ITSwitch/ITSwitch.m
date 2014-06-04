@@ -10,7 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-
 // ----------------------------------------------------
 #pragma mark - Preprocessor
 // ----------------------------------------------------
@@ -38,6 +37,11 @@
 #pragma mark - NSColor Addition for OS X <= 10.7 support
 // ---------------------------------------------------------------------------------------
 
+static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
+    id __autoreleasing result = CFBridgingRelease(obj);
+    return (__bridge CFTypeRef)result;
+}
+
 @interface NSColor (ITSwitchCGColor)
 @property (nonatomic, readonly) CGColorRef it_CGColor;
 @end
@@ -52,7 +56,7 @@
     [self getComponents:(CGFloat *)&components];
     
     CGColorRef result = CGColorCreate(colorSpace, components);
-    CFAutorelease(result);
+    it_CFAutorelease(result);
     
     return result;
 }
