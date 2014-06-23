@@ -25,7 +25,10 @@
 
 /**
  *  @property enabled - Gets or sets whether the switch is disabled or not
+ *                      The Property is inherited from NSControl, which is why we override it's accessors
  */
-@property (nonatomic, setter = setEnabled:, getter = isEnabled) BOOL enabled;
+- (BOOL)isEnabled;
+- (void)setEnabled:(BOOL)enabled;
+
 
 @end

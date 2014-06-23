@@ -268,7 +268,7 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    if (!self.enabled) return;
+    if (!self.isEnabled) return;
 
     self.isActive = YES;
     
@@ -276,7 +276,7 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
-    if (!self.enabled) return;
+    if (!self.isEnabled) return;
 
     self.hasDragged = YES;
     
@@ -287,7 +287,7 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
-    if (!self.enabled) return;
+    if (!self.isEnabled) return;
 
     self.isActive = NO;
     
@@ -356,13 +356,12 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     [self reloadLayer];
 }
 
+- (BOOL)isEnabled {
+    return super.isEnabled;
+}
+
 - (void)setEnabled:(BOOL)enabled {
-    [self willChangeValueForKey:@"enabled"];
-    {
-        _enabled = enabled;
-    }
-    [self didChangeValueForKey:@"enabled"];
-    
+    [super setEnabled:enabled];
     [self reloadLayer];
 }
 

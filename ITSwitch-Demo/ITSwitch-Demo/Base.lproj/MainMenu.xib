@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -664,21 +664,21 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                         <connections>
-                            <action selector="switchChanged:" target="494" id="mqT-HI-dN0"/>
+                            <action selector="switchChanged:" target="494" id="aXZ-Ym-NsO"/>
                         </connections>
                     </customView>
                     <customView id="KC3-Wk-7Tp" customClass="ITSwitch">
                         <rect key="frame" x="20" y="20" width="112" height="70"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <connections>
-                            <action selector="switchChanged:" target="494" id="l3m-Qd-48v"/>
+                            <action selector="switchChanged:" target="494" id="FdO-a9-0T6"/>
                         </connections>
                     </customView>
                     <customView id="wbL-QI-qCf" customClass="ITSwitch">
                         <rect key="frame" x="20" y="103" width="32" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <connections>
-                            <action selector="switchChanged:" target="494" id="y83-vH-sIW"/>
+                            <action selector="switchChanged:" target="494" id="DmH-Gr-IeV"/>
                         </connections>
                     </customView>
                     <customView id="CAh-nX-5yI" customClass="ITSwitch">
@@ -690,7 +690,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                         <connections>
-                            <action selector="switchChanged:" target="494" id="SoY-el-rv8"/>
+                            <action selector="switchChanged:" target="494" id="Za7-Td-PxF"/>
                         </connections>
                     </customView>
                 </subviews>
@@ -698,7 +698,7 @@
         </window>
         <customObject id="494" customClass="ITAppDelegate">
             <connections>
-                <outlet property="itSwitch" destination="0QQ-Rg-pWh" id="xnb-J7-x4w"/>
+                <outlet property="itSwitch" destination="CAh-nX-5yI" id="dfS-lF-Hqu"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
