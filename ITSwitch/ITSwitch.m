@@ -74,14 +74,14 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     SEL _action;
 }
 
-@property (setter = setActive:) BOOL isActive;
-@property (setter = setDragged:) BOOL hasDragged;
-@property (setter = setDraggingTowardsOn:) BOOL isDraggingTowardsOn;
+@property (nonatomic, setter = setActive:) BOOL isActive;
+@property (nonatomic, setter = setDragged:) BOOL hasDragged;
+@property (nonatomic, setter = setDraggingTowardsOn:) BOOL isDraggingTowardsOn;
 
-@property (readonly, strong) CALayer *rootLayer;
-@property (readonly, strong) CALayer *backgroundLayer;
-@property (readonly, strong) CALayer *knobLayer;
-@property (readonly, strong) CALayer *knobInsideLayer;
+@property (nonatomic, readonly, strong) CALayer *rootLayer;
+@property (nonatomic, readonly, strong) CALayer *backgroundLayer;
+@property (nonatomic, readonly, strong) CALayer *knobLayer;
+@property (nonatomic, readonly, strong) CALayer *knobInsideLayer;
 
 @end
 
