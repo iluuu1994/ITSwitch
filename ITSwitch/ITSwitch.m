@@ -422,5 +422,106 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     }
 }
 
+// -----------------------------------
+#pragma mark - Accessibility
+// -----------------------------------
+
+- (BOOL)accessibilityIsIgnored {
+	return NO;
+}
+
+- (id)accessibilityHitTest:(NSPoint)point {
+	return self;
+}
+
+- (NSArray *)accessibilityAttributeNames {
+	static NSArray *attributes = nil;
+	if (attributes == nil)
+	{
+		NSMutableArray *mutableAttributes = [[super accessibilityAttributeNames] mutableCopy];
+		if (mutableAttributes == nil)
+			mutableAttributes = [NSMutableArray new];
+		
+		// Add attributes
+		if (![mutableAttributes containsObject:NSAccessibilityValueAttribute])
+			[mutableAttributes addObject:NSAccessibilityValueAttribute];
+		
+		if (![mutableAttributes containsObject:NSAccessibilityEnabledAttribute])
+			[mutableAttributes addObject:NSAccessibilityEnabledAttribute];
+		
+		if (![mutableAttributes containsObject:NSAccessibilityDescriptionAttribute])
+			[mutableAttributes addObject:NSAccessibilityDescriptionAttribute];
+		
+		// Remove attributes
+		if ([mutableAttributes containsObject:NSAccessibilityChildrenAttribute])
+			[mutableAttributes removeObject:NSAccessibilityChildrenAttribute];
+		
+		attributes = [mutableAttributes copy];
+	}
+	return attributes;
+}
+
+- (id)accessibilityAttributeValue:(NSString *)attribute {
+	id retVal = nil;
+	if ([attribute isEqualToString:NSAccessibilityRoleAttribute])
+		retVal = NSAccessibilityCheckBoxRole;
+	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
+		retVal = [NSNumber numberWithInt:self.isOn];
+	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
+		retVal = [NSNumber numberWithBool:self.enabled];
+	else
+		retVal = [super accessibilityAttributeValue:attribute];
+	return retVal;
+}
+
+- (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute {
+	BOOL retVal;
+	if ([attribute isEqualToString:NSAccessibilityValueAttribute])
+		retVal = YES;
+	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
+		retVal = NO;
+	else if ([attribute isEqualToString:NSAccessibilityDescriptionAttribute])
+		retVal = NO;
+	else
+		retVal = [super accessibilityIsAttributeSettable:attribute];
+	return retVal;
+}
+
+- (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute {
+	if ([attribute isEqualToString:NSAccessibilityValueAttribute]) {
+		BOOL invokeTargetAction = self.isOn != [value boolValue];
+		self.isOn = [value boolValue];
+		if (invokeTargetAction) {
+			[self _invokeTargetAction];
+		}
+	}
+	else {
+		[super accessibilitySetValue:value forAttribute:attribute];
+	}
+}
+
+- (NSArray *)accessibilityActionNames {
+	static NSArray *actions = nil;
+	if (actions == nil)
+	{
+		NSMutableArray *mutableActions = [[super accessibilityActionNames] mutableCopy];
+		if (mutableActions == nil)
+			mutableActions = [NSMutableArray new];
+		if (![mutableActions containsObject:NSAccessibilityPressAction])
+			[mutableActions addObject:NSAccessibilityPressAction];
+		actions = [mutableActions copy];
+	}
+	return actions;
+}
+
+- (void)accessibilityPerformAction:(NSString *)actionString {
+	if ([actionString isEqualToString:NSAccessibilityPressAction]) {
+		self.isOn = !self.isOn;
+		[self _invokeTargetAction];
+	}
+	else {
+		[super accessibilityPerformAction:actionString];
+	}
+}
 
 @end
