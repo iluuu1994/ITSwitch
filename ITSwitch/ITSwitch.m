@@ -183,6 +183,20 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     [self reloadLayerSize];
 }
 
+- (void)drawFocusRingMask {
+	CGFloat cornerRadius = NSHeight([self bounds])/2.0;
+	NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:[self bounds] xRadius:cornerRadius yRadius:cornerRadius];
+	[[NSColor blackColor] set];
+	[path fill];
+}
+
+- (BOOL)canBecomeKeyView {
+	return [NSApp isFullKeyboardAccessEnabled];
+}
+
+- (NSRect)focusRingMaskBounds {
+	return [self bounds];
+}
 
 
 // ----------------------------------------------------
@@ -264,7 +278,7 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
 // ----------------------------------------------------
 
 - (BOOL)acceptsFirstResponder {
-    return YES;
+	return [NSApp isFullKeyboardAccessEnabled];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -304,7 +318,34 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     [self reloadLayer];
 }
 
+- (void)moveLeft:(id)sender {
+	if (self.isOn) {
+		self.isOn = NO;
+		[self _invokeTargetAction];
+	}
+}
 
+- (void)moveRight:(id)sender {
+	if (self.isOn == NO) {
+		self.isOn = YES;
+		[self _invokeTargetAction];
+	}
+}
+
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent {
+	BOOL handledKeyEquivalent = NO;
+	if ([[self window] firstResponder] == self) {
+		NSInteger ch = [theEvent keyCode];
+		
+		if (ch == 49) //Space
+		{
+			self.isOn = !self.isOn;
+			[self _invokeTargetAction];
+			handledKeyEquivalent = YES;
+		}
+	}
+	return handledKeyEquivalent;
+}
 
 // ----------------------------------------------------
 #pragma mark - NSControl
