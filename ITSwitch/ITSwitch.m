@@ -31,40 +31,6 @@
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 #define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0 alpha:0.3]
 
-
-
-// ---------------------------------------------------------------------------------------
-#pragma mark - NSColor Addition for OS X <= 10.7 support
-// ---------------------------------------------------------------------------------------
-
-static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
-    id __autoreleasing result = CFBridgingRelease(obj);
-    return (__bridge CFTypeRef)result;
-}
-
-@interface NSColor (ITSwitchCGColor)
-@property (nonatomic, readonly) CGColorRef it_CGColor;
-@end
-
-@implementation NSColor (ITSwitchCGColor)
-
-- (CGColorRef)it_CGColor {
-    const NSInteger numberOfComponents = [self numberOfComponents];
-    CGFloat components[numberOfComponents];
-    CGColorSpaceRef colorSpace = [[self colorSpace] CGColorSpace];
-    
-    [self getComponents:(CGFloat *)&components];
-    
-    CGColorRef result = CGColorCreate(colorSpace, components);
-    it_CFAutorelease(result);
-    
-    return result;
-}
-
-@end
-
-
-
 // ---------------------------------------------------------------------------------------
 #pragma mark - Interface Extension
 // ---------------------------------------------------------------------------------------
@@ -145,8 +111,8 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     _knobLayer = [CALayer layer];
     _knobLayer.frame = [self rectForKnob];
     _knobLayer.autoresizingMask = kCALayerHeightSizable;
-    _knobLayer.backgroundColor = [kKnobBackgroundColor it_CGColor];
-    _knobLayer.shadowColor = [[NSColor blackColor] it_CGColor];
+    _knobLayer.backgroundColor = [kKnobBackgroundColor  CGColor];
+    _knobLayer.shadowColor = [[NSColor blackColor] CGColor];
     _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
     _knobLayer.shadowRadius = 1.f;
     _knobLayer.shadowOpacity = 0.3f;
@@ -155,9 +121,9 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
     _knobInsideLayer = [CALayer layer];
     _knobInsideLayer.frame = _knobLayer.bounds;
     _knobInsideLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-    _knobInsideLayer.shadowColor = [[NSColor blackColor] it_CGColor];
+    _knobInsideLayer.shadowColor = [[NSColor blackColor] CGColor];
     _knobInsideLayer.shadowOffset = (CGSize){ .width = 0.f, .height = 0.f };
-    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] it_CGColor];
+    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] CGColor];
     _knobInsideLayer.shadowRadius = 1.f;
     _knobInsideLayer.shadowOpacity = 0.35f;
     [_knobLayer addSublayer:_knobInsideLayer];
@@ -214,11 +180,11 @@ static inline CFTypeRef it_CFAutorelease(CFTypeRef obj) {
         
         // ------------------------------- Animate Colors
         if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
-            _backgroundLayer.borderColor = [self.tintColor it_CGColor];
-            _backgroundLayer.backgroundColor = [self.tintColor it_CGColor];
+            _backgroundLayer.borderColor = [self.tintColor CGColor];
+            _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
-            _backgroundLayer.borderColor = [kDisabledBorderColor it_CGColor];
-            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor it_CGColor];
+            _backgroundLayer.borderColor = [kDisabledBorderColor CGColor];
+            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
         }
         
         // ------------------------------- Animate Enabled-Disabled state
