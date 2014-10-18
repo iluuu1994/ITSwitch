@@ -22,6 +22,10 @@ Additionally, you can use these two properties:
 Since `ITSwitch` uses its `CALayer` to draw a drop-shadow, you should also layer-back it's superview.
 If you don't use Core Animation, you can also simply embed the view in a layer-backed view.
 
+Requirements
+------------
+
+ITSwitch requires 10.8+, and that your project link against QuartzCore.framework. 
 
 Tips
 ----
