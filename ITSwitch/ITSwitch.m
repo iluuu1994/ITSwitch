@@ -42,7 +42,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 @interface ITSwitch () 
 
-@property (nonatomic, setter = setActive:) BOOL isActive;
+@property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic, setter = setDragged:) BOOL hasDragged;
 @property (nonatomic, setter = setDraggingTowardsOn:) BOOL isDraggingTowardsOn;
 
@@ -225,7 +225,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (CGRect)rectForKnob {
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
-    CGFloat width = !self.isActive ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
+    CGFloat width = ![self isActive] ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
     (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
     CGFloat x = ((!self.hasDragged && !self.isOn) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
     kBorderLineWidth :
@@ -252,7 +252,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 - (void)mouseDown:(NSEvent *)theEvent {
     if (!self.isEnabled) return;
 
-    self.isActive = YES;
+    self.active = YES;
     
     [self reloadLayer];
 }
@@ -271,7 +271,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 - (void)mouseUp:(NSEvent *)theEvent {
     if (!self.isEnabled) return;
 
-    self.isActive = NO;
+    self.active = NO;
     
     BOOL isOn = (!self.hasDragged) ? ![self isOn] : self.isDraggingTowardsOn;
     BOOL invokeTargetAction = (isOn != [self isOn]);
