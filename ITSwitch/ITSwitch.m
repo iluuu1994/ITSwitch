@@ -11,18 +11,23 @@
 
 
 // ----------------------------------------------------
+#pragma mark - Static Constants
+// ----------------------------------------------------
+
+static NSTimeInterval const kAnimationDuration = 0.4f;
+
+static CGFloat const kBorderLineWidth = 1.f;
+
+static CGFloat const kGoldenRatio = 1.61803398875f;
+static CGFloat const kDecreasedGoldenRatio = 1.38;
+
+static CGFloat const kEnabledOpacity = 1.f;
+static CGFloat const kDisabledOpacity = 0.5f;
+
+// ----------------------------------------------------
 #pragma mark - Preprocessor
 // ----------------------------------------------------
 
-#define kAnimationDuration 0.4f
-
-#define kBorderLineWidth 1.f
-
-#define kGoldenRatio 1.61803398875f
-#define kDecreasedGoldenRatio 1.38
-
-#define kEnabledOpacity 1.f
-#define kDisabledOpacity 0.5f
 
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
@@ -35,14 +40,11 @@
 #pragma mark - Interface Extension
 // ---------------------------------------------------------------------------------------
 
-@interface ITSwitch () {
-    __weak id _target;
-    SEL _action;
-}
+@interface ITSwitch () 
 
-@property (nonatomic, setter = setActive:) BOOL isActive;
-@property (nonatomic, setter = setDragged:) BOOL hasDragged;
-@property (nonatomic, setter = setDraggingTowardsOn:) BOOL isDraggingTowardsOn;
+@property (nonatomic, getter = isActive) BOOL active;
+@property (nonatomic, getter = hasDragged) BOOL dragged;
+@property (nonatomic, getter = isDraggingTowardsOn) BOOL draggingTowardsOn;
 
 @property (nonatomic, readonly, strong) CALayer *rootLayer;
 @property (nonatomic, readonly, strong) CALayer *backgroundLayer;
@@ -179,7 +181,7 @@
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if ((self.hasDragged && self.isDraggingTowardsOn) || (!self.hasDragged && self.isOn)) {
+        if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self isOn])) {
             _backgroundLayer.borderColor = [self.tintColor CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
@@ -191,7 +193,7 @@
         _rootLayer.opacity = (self.isEnabled) ? kEnabledOpacity : kDisabledOpacity;
 
         // ------------------------------- Animate Frame
-        if (!self.hasDragged) {
+        if (![self hasDragged]) {
             CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
             [CATransaction setAnimationTimingFunction:function];
         }
@@ -223,9 +225,9 @@
 
 - (CGRect)rectForKnob {
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
-    CGFloat width = !self.isActive ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
+    CGFloat width = ![self isActive] ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
     (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
-    CGFloat x = ((!self.hasDragged && !self.isOn) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
+    CGFloat x = ((![self hasDragged] && ![self isOn]) || (self.hasDragged && ![self isDraggingTowardsOn])) ?
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
@@ -250,7 +252,7 @@
 - (void)mouseDown:(NSEvent *)theEvent {
     if (!self.isEnabled) return;
 
-    self.isActive = YES;
+    self.active = YES;
     
     [self reloadLayer];
 }
@@ -258,10 +260,10 @@
 - (void)mouseDragged:(NSEvent *)theEvent {
     if (!self.isEnabled) return;
 
-    self.hasDragged = YES;
+    self.dragged = YES;
     
     NSPoint draggingPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    self.isDraggingTowardsOn = draggingPoint.x >= NSWidth(self.bounds) / 2.f;
+    self.draggingTowardsOn = draggingPoint.x >= NSWidth(self.bounds) / 2.f;
     
     [self reloadLayer];
 }
@@ -269,31 +271,31 @@
 - (void)mouseUp:(NSEvent *)theEvent {
     if (!self.isEnabled) return;
 
-    self.isActive = NO;
+    self.active = NO;
     
-    BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
-    BOOL invokeTargetAction = (isOn != _isOn);
+    BOOL isOn = (![self hasDragged]) ? ![self isOn] : [self isDraggingTowardsOn];
+    BOOL invokeTargetAction = (isOn != [self isOn]);
     
-    self.isOn = isOn;
+    self.on = isOn;
     if (invokeTargetAction) [self _invokeTargetAction];
     
     // Reset
-    self.hasDragged = NO;
-    self.isDraggingTowardsOn = NO;
+    self.dragged = NO;
+    self.draggingTowardsOn = NO;
     
     [self reloadLayer];
 }
 
 - (void)moveLeft:(id)sender {
-	if (self.isOn) {
-		self.isOn = NO;
+	if ([self isOn]) {
+		self.on = NO;
 		[self _invokeTargetAction];
 	}
 }
 
 - (void)moveRight:(id)sender {
-	if (self.isOn == NO) {
-		self.isOn = YES;
+	if ([self isOn] == NO) {
+		self.on = YES;
 		[self _invokeTargetAction];
 	}
 }
@@ -305,7 +307,7 @@
 		
 		if (ch == 49) //Space
 		{
-			self.isOn = !self.isOn;
+			self.on = ![self isOn];
 			[self _invokeTargetAction];
 			handledKeyEquivalent = YES;
 		}
@@ -313,39 +315,14 @@
 	return handledKeyEquivalent;
 }
 
-// ----------------------------------------------------
-#pragma mark - NSControl
-// ----------------------------------------------------
-
-- (id)target {
-    return _target;
-}
-
-- (void)setTarget:(id)target {
-    _target = target;
-}
-
-- (SEL)action {
-    return _action;
-}
-
-- (void)setAction:(SEL)action {
-    _action = action;
-}
-
-
 
 // ----------------------------------------------------
 #pragma mark - Accessors
 // ----------------------------------------------------
 
-- (void)setOn:(BOOL)isOn {
-    if (_isOn != isOn) {
-        [self willChangeValueForKey:@"isOn"];
-        {
-            _isOn = isOn;
-        }
-        [self didChangeValueForKey:@"isOn"];
+- (void)setOn:(BOOL)on {
+    if (_on != on) {
+		_on = on;
     }
     
     [self reloadLayer];
@@ -361,10 +338,6 @@
     _tintColor = tintColor;
     
     [self reloadLayer];
-}
-
-- (BOOL)isEnabled {
-    return super.isEnabled;
 }
 
 - (void)setEnabled:(BOOL)enabled {
@@ -456,7 +429,7 @@
 - (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueAttribute]) {
 		BOOL invokeTargetAction = self.isOn != [value boolValue];
-		self.isOn = [value boolValue];
+		self.on = [value boolValue];
 		if (invokeTargetAction) {
 			[self _invokeTargetAction];
 		}
@@ -482,7 +455,7 @@
 
 - (void)accessibilityPerformAction:(NSString *)actionString {
 	if ([actionString isEqualToString:NSAccessibilityPressAction]) {
-		self.isOn = !self.isOn;
+		self.on = ![self isOn];
 		[self _invokeTargetAction];
 	}
 	else {
