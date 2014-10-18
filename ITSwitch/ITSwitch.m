@@ -40,10 +40,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #pragma mark - Interface Extension
 // ---------------------------------------------------------------------------------------
 
-@interface ITSwitch () {
-    __weak id _target;
-    SEL _action;
-}
+@interface ITSwitch () 
 
 @property (nonatomic, setter = setActive:) BOOL isActive;
 @property (nonatomic, setter = setDragged:) BOOL hasDragged;
@@ -317,27 +314,6 @@ static CGFloat const kDisabledOpacity = 0.5f;
 	}
 	return handledKeyEquivalent;
 }
-
-// ----------------------------------------------------
-#pragma mark - NSControl
-// ----------------------------------------------------
-
-- (id)target {
-    return _target;
-}
-
-- (void)setTarget:(id)target {
-    _target = target;
-}
-
-- (SEL)action {
-    return _action;
-}
-
-- (void)setAction:(SEL)action {
-    _action = action;
-}
-
 
 
 // ----------------------------------------------------
