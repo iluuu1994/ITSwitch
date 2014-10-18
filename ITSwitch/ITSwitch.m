@@ -44,7 +44,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 @property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic, getter = hasDragged) BOOL dragged;
-@property (nonatomic, setter = setDraggingTowardsOn:) BOOL isDraggingTowardsOn;
+@property (nonatomic, getter = isDraggingTowardsOn) BOOL draggingTowardsOn;
 
 @property (nonatomic, readonly, strong) CALayer *rootLayer;
 @property (nonatomic, readonly, strong) CALayer *backgroundLayer;
@@ -181,7 +181,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if (([self hasDragged] && self.isDraggingTowardsOn) || (![self hasDragged] && [self isOn])) {
+        if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self isOn])) {
             _backgroundLayer.borderColor = [self.tintColor CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
@@ -227,7 +227,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
     CGFloat width = ![self isActive] ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
     (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
-    CGFloat x = ((![self hasDragged] && ![self isOn]) || (self.hasDragged && !self.isDraggingTowardsOn)) ?
+    CGFloat x = ((![self hasDragged] && ![self isOn]) || (self.hasDragged && ![self isDraggingTowardsOn])) ?
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
@@ -263,7 +263,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
     self.dragged = YES;
     
     NSPoint draggingPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    self.isDraggingTowardsOn = draggingPoint.x >= NSWidth(self.bounds) / 2.f;
+    self.draggingTowardsOn = draggingPoint.x >= NSWidth(self.bounds) / 2.f;
     
     [self reloadLayer];
 }
@@ -273,7 +273,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
     self.active = NO;
     
-    BOOL isOn = (![self hasDragged]) ? ![self isOn] : self.isDraggingTowardsOn;
+    BOOL isOn = (![self hasDragged]) ? ![self isOn] : [self isDraggingTowardsOn];
     BOOL invokeTargetAction = (isOn != [self isOn]);
     
     self.on = isOn;
@@ -281,7 +281,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
     
     // Reset
     self.dragged = NO;
-    self.isDraggingTowardsOn = NO;
+    self.draggingTowardsOn = NO;
     
     [self reloadLayer];
 }
