@@ -15,7 +15,7 @@ You can create an IBAction and simply connect the two in Interface Builder.
 Additionally, you can use these two properties:
 
 ```objc
-@property (nonatomic, setter = setOn:) BOOL isOn;
+@property (nonatomic, getter = isOn) BOOL on;
 @property (nonatomic, strong) NSColor *tintColor;
 ```
 
