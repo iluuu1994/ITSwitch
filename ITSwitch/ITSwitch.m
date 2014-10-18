@@ -344,10 +344,6 @@ static CGFloat const kDisabledOpacity = 0.5f;
     [self reloadLayer];
 }
 
-- (BOOL)isEnabled {
-    return super.isEnabled;
-}
-
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
     [self reloadLayer];
