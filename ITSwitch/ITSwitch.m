@@ -273,10 +273,10 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
     self.isActive = NO;
     
-    BOOL isOn = (!self.hasDragged) ? !self.isOn : self.isDraggingTowardsOn;
-    BOOL invokeTargetAction = (isOn != _isOn);
+    BOOL isOn = (!self.hasDragged) ? ![self isOn] : self.isDraggingTowardsOn;
+    BOOL invokeTargetAction = (isOn != [self isOn]);
     
-    self.isOn = isOn;
+    self.on = isOn;
     if (invokeTargetAction) [self _invokeTargetAction];
     
     // Reset
@@ -287,15 +287,15 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 - (void)moveLeft:(id)sender {
-	if (self.isOn) {
-		self.isOn = NO;
+	if ([self isOn]) {
+		self.on = NO;
 		[self _invokeTargetAction];
 	}
 }
 
 - (void)moveRight:(id)sender {
-	if (self.isOn == NO) {
-		self.isOn = YES;
+	if ([self isOn] == NO) {
+		self.on = YES;
 		[self _invokeTargetAction];
 	}
 }
@@ -307,7 +307,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 		
 		if (ch == 49) //Space
 		{
-			self.isOn = !self.isOn;
+			self.on = ![self isOn];
 			[self _invokeTargetAction];
 			handledKeyEquivalent = YES;
 		}
@@ -320,13 +320,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #pragma mark - Accessors
 // ----------------------------------------------------
 
-- (void)setOn:(BOOL)isOn {
-    if (_isOn != isOn) {
-        [self willChangeValueForKey:@"isOn"];
-        {
-            _isOn = isOn;
-        }
-        [self didChangeValueForKey:@"isOn"];
+- (void)setOn:(BOOL)on {
+    if (_on != on) {
+		_on = on;
     }
     
     [self reloadLayer];
@@ -433,7 +429,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 - (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueAttribute]) {
 		BOOL invokeTargetAction = self.isOn != [value boolValue];
-		self.isOn = [value boolValue];
+		self.on = [value boolValue];
 		if (invokeTargetAction) {
 			[self _invokeTargetAction];
 		}
@@ -459,7 +455,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)accessibilityPerformAction:(NSString *)actionString {
 	if ([actionString isEqualToString:NSAccessibilityPressAction]) {
-		self.isOn = !self.isOn;
+		self.on = ![self isOn];
 		[self _invokeTargetAction];
 	}
 	else {

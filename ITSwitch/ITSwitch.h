@@ -14,9 +14,9 @@
 @interface ITSwitch : NSControl
 
 /**
- *  @property isOn - Gets or sets the switches state
+ *  @property on - Gets or sets the switches state
  */
-@property (nonatomic, setter = setOn:) BOOL isOn;
+@property (nonatomic, getter=isOn) BOOL on;
 
 /**
  *  @property tintColor - Gets or sets the switches tint
