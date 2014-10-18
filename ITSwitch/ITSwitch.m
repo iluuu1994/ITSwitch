@@ -11,18 +11,23 @@
 
 
 // ----------------------------------------------------
+#pragma mark - Static Constants
+// ----------------------------------------------------
+
+static NSTimeInterval const kAnimationDuration = 0.4f;
+
+static CGFloat const kBorderLineWidth = 1.f;
+
+static CGFloat const kGoldenRatio = 1.61803398875f;
+static CGFloat const kDecreasedGoldenRatio = 1.38;
+
+static CGFloat const kEnabledOpacity = 1.f;
+static CGFloat const kDisabledOpacity = 0.5f;
+
+// ----------------------------------------------------
 #pragma mark - Preprocessor
 // ----------------------------------------------------
 
-#define kAnimationDuration 0.4f
-
-#define kBorderLineWidth 1.f
-
-#define kGoldenRatio 1.61803398875f
-#define kDecreasedGoldenRatio 1.38
-
-#define kEnabledOpacity 1.f
-#define kDisabledOpacity 0.5f
 
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
