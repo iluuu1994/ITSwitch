@@ -11,16 +11,17 @@
 /**
  *  ITSwitch is a replica of UISwitch for Mac OS X
  */
+IB_DESIGNABLE
 @interface ITSwitch : NSControl
 
 /**
  *  @property on - Gets or sets the switches state
  */
-@property (nonatomic, getter=isOn) BOOL on;
+@property (nonatomic, getter=isOn) IBInspectable BOOL on;
 
 /**
  *  @property tintColor - Gets or sets the switches tint
  */
-@property (nonatomic, strong) NSColor *tintColor;
+@property (nonatomic, strong) IBInspectable NSColor *tintColor;
 
 @end
