@@ -40,7 +40,10 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #pragma mark - Interface Extension
 // ---------------------------------------------------------------------------------------
 
-@interface ITSwitch () 
+@interface ITSwitch () {
+    __weak id _target;
+    SEL _action;
+}
 
 @property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic, getter = hasDragged) BOOL dragged;
@@ -319,6 +322,22 @@ static CGFloat const kDisabledOpacity = 0.5f;
 // ----------------------------------------------------
 #pragma mark - Accessors
 // ----------------------------------------------------
+
+- (id)target {
+    return _target;
+}
+
+- (void)setTarget:(id)target {
+    _target = target;
+}
+
+- (SEL)action {
+    return _action;
+}
+
+- (void)setAction:(SEL)action {
+    _action = action;
+}
 
 - (void)setOn:(BOOL)on {
     if (_on != on) {
