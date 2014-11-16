@@ -25,7 +25,7 @@ If you don't use Core Animation, you can also simply embed the view in a layer-b
 Requirements
 ------------
 
-ITSwitch requires 10.9+, and that your project link against QuartzCore.framework. 
+ITSwitch requires 10.9+ and linking against the QuartzCore.framework. 
 
 Tips
 ----
