@@ -426,7 +426,11 @@ static CGFloat const kDisabledOpacity = 0.5f;
 	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
 		retVal = [NSNumber numberWithInt:self.isOn];
 	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-		retVal = [NSNumber numberWithBool:self.enabled];
+#ifdef COMPILE_FOR_LION
+        retVal = [NSNumber numberWithBool:self.isEnabled];
+#else
+        retVal = [NSNumber numberWithBool:self.enabled];
+#endif
 	else
 		retVal = [super accessibilityAttributeValue:attribute];
 	return retVal;
@@ -487,12 +491,13 @@ static CGFloat const kDisabledOpacity = 0.5f;
 /**
  *  Support for CGColor in Lion
  */
-#if __MAC_OS_X_VERSION_MIN_REQUIRED < 1080
+#ifdef COMPILE_FOR_LION
 
 @implementation NSColor (CGColorExtends)
 
 - (CGColorRef)CGColor
 {
+    NSColorSpace *colorSpace = [self colorSpace];
     CGFloat components[[[self colorSpace] numberOfColorComponents]];
     [self getComponents:components];
     return CGColorCreate([colorSpace CGColorSpace], components);
@@ -500,4 +505,4 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 @end
 
-#endif /* __MAC_OS_X_VERSION_MIN_REQUIRED < 1080 */
+#endif /* COMPILE_FOR_LION */
