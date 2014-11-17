@@ -19,7 +19,7 @@ static NSTimeInterval const kAnimationDuration = 0.4f;
 static CGFloat const kBorderLineWidth = 1.f;
 
 static CGFloat const kGoldenRatio = 1.61803398875f;
-static CGFloat const kDecreasedGoldenRatio = 1.38;
+static CGFloat const kDecreasedGoldenRatio = 1.38f;
 
 static CGFloat const kEnabledOpacity = 1.f;
 static CGFloat const kDisabledOpacity = 0.5f;
@@ -34,7 +34,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
-#define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0 alpha:0.3]
+#define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0.f alpha:0.3f]
 
 // ---------------------------------------------------------------------------------------
 #pragma mark - Interface Extension
@@ -483,3 +483,21 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 @end
+
+/**
+ *  Support for CGColor in Lion
+ */
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < 1080
+
+@implementation NSColor (CGColorExtends)
+
+- (CGColorRef)CGColor
+{
+    CGFloat components[[[self colorSpace] numberOfColorComponents]];
+    [self getComponents:components];
+    return CGColorCreate([colorSpace CGColorSpace], components);
+}
+
+@end
+
+#endif /* __MAC_OS_X_VERSION_MIN_REQUIRED < 1080 */
