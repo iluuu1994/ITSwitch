@@ -116,8 +116,8 @@ static CGFloat const kDisabledOpacity = 0.5f;
     _knobLayer = [CALayer layer];
     _knobLayer.frame = [self rectForKnob];
     _knobLayer.autoresizingMask = kCALayerHeightSizable;
-    _knobLayer.backgroundColor = [kKnobBackgroundColor  CGColor];
-    _knobLayer.shadowColor = [[NSColor blackColor] CGColor];
+    _knobLayer.backgroundColor = [kKnobBackgroundColor  its_CGColor];
+    _knobLayer.shadowColor = [[NSColor blackColor] its_CGColor];
     _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
     _knobLayer.shadowRadius = 1.f;
     _knobLayer.shadowOpacity = 0.3f;
@@ -126,9 +126,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
     _knobInsideLayer = [CALayer layer];
     _knobInsideLayer.frame = _knobLayer.bounds;
     _knobInsideLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-    _knobInsideLayer.shadowColor = [[NSColor blackColor] CGColor];
+    _knobInsideLayer.shadowColor = [[NSColor blackColor] its_CGColor];
     _knobInsideLayer.shadowOffset = (CGSize){ .width = 0.f, .height = 0.f };
-    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] CGColor];
+    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] its_CGColor];
     _knobInsideLayer.shadowRadius = 1.f;
     _knobInsideLayer.shadowOpacity = 0.35f;
     [_knobLayer addSublayer:_knobInsideLayer];
@@ -185,11 +185,11 @@ static CGFloat const kDisabledOpacity = 0.5f;
         
         // ------------------------------- Animate Colors
         if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self isOn])) {
-            _backgroundLayer.borderColor = [self.tintColor CGColor];
-            _backgroundLayer.backgroundColor = [self.tintColor CGColor];
+            _backgroundLayer.borderColor = [self.tintColor its_CGColor];
+            _backgroundLayer.backgroundColor = [self.tintColor its_CGColor];
         } else {
-            _backgroundLayer.borderColor = [kDisabledBorderColor CGColor];
-            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
+            _backgroundLayer.borderColor = [kDisabledBorderColor its_CGColor];
+            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor its_CGColor];
         }
         
         // ------------------------------- Animate Enabled-Disabled state
@@ -491,12 +491,13 @@ static CGFloat const kDisabledOpacity = 0.5f;
 /**
  *  Support for CGColor in Lion
  */
-#ifdef COMPILE_FOR_LION
-
 @implementation NSColor (CGColorExtends)
 
-- (CGColorRef)CGColor
+- (CGColorRef)its_CGColor
 {
+    if ([self respondsToSelector:NSSelectorFromString(@"CGColor")]) {
+        return (__bridge CGColorRef)[self performSelector:NSSelectorFromString(@"CGColor")];
+    }
     NSColorSpace *colorSpace = [self colorSpace];
     CGFloat components[[[self colorSpace] numberOfColorComponents]];
     [self getComponents:components];
@@ -504,5 +505,3 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 @end
-
-#endif /* COMPILE_FOR_LION */

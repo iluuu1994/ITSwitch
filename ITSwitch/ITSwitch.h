@@ -41,12 +41,8 @@ IB_DESIGNABLE
 /**
  *  Support for CGColor in Lion
  */
-#ifdef COMPILE_FOR_LION
-
 @interface NSColor (CGColorExtends)
 
-- (CGColorRef)CGColor;
+- (CGColorRef)its_CGColor;
 
 @end
-
-#endif /* COMPILE_FOR_LION */
