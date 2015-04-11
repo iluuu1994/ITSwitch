@@ -26,27 +26,25 @@
 IB_DESIGNABLE
 @interface ITSwitch : NSControl
 
-/**
- *  @property on - Gets or sets the switches state
- */
-@property (nonatomic, getter=isOn) IBInspectable BOOL on;
+@property (nonatomic) IBInspectable BOOL enabled;
 
 /**
  *  @property tintColor - Gets or sets the switches tint
  */
-@property (nonatomic, strong) IBInspectable NSColor *tintColor;
+@property (nonatomic, getter = isOn) IBInspectable BOOL on;
+
+/**
+ *  @property tintColor - Gets or sets the switches tint
+ */
+@property (atomic, strong) IBInspectable NSColor *tintColor;
 
 @end
 
 /**
  *  Support for CGColor in Lion
  */
-#ifdef COMPILE_FOR_LION
-
 @interface NSColor (CGColorExtends)
 
-- (CGColorRef)CGColor;
+- (CGColorRef)its_CGColor;
 
 @end
-
-#endif /* COMPILE_FOR_LION */
