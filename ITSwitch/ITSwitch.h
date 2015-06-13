@@ -26,7 +26,7 @@
 IB_DESIGNABLE
 @interface ITSwitch : NSControl
 
-@property (nonatomic) IBInspectable BOOL enabled;
+//@property (nonatomic, getter = isEnabled) IBInspectable BOOL enabled;
 
 /**
  *  @property tintColor - Gets or sets the switches tint

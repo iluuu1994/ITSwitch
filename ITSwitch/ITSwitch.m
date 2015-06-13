@@ -481,17 +481,18 @@ static CGFloat const kDisabledOpacity = 0.5f;
 - (CGColorRef)its_CGColor
 {
     SEL selector = NSSelectorFromString(@"CGColor");
+    CGColorRef result;
     if ([self respondsToSelector:selector]) {
         IMP imp = [self methodForSelector:selector];
         CGColorRef (*func)(id, SEL) = (void *)imp;
-        CGColorRef result = func(self, selector);
-        return result;
+        result = func(self, selector);
+    } else {
+        NSColorSpace *colorSpace = [self colorSpace];
+        CGFloat components[[[self colorSpace] numberOfColorComponents]];
+        [self getComponents:components];
+        result = (__bridge CGColorRef)(CFBridgingRelease(CGColorCreate([colorSpace CGColorSpace], components)));
     }
-    
-    NSColorSpace *colorSpace = [self colorSpace];
-    CGFloat components[[[self colorSpace] numberOfColorComponents]];
-    [self getComponents:components];
-    return (__bridge CGColorRef)(CFBridgingRelease(CGColorCreate([colorSpace CGColorSpace], components)));
+    return result;
 }
 
 @end
