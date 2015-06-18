@@ -19,7 +19,7 @@ static NSTimeInterval const kAnimationDuration = 0.4f;
 static CGFloat const kBorderLineWidth = 1.f;
 
 static CGFloat const kGoldenRatio = 1.61803398875f;
-static CGFloat const kDecreasedGoldenRatio = 1.38;
+static CGFloat const kDecreasedGoldenRatio = 1.38f;
 
 static CGFloat const kEnabledOpacity = 1.f;
 static CGFloat const kDisabledOpacity = 0.5f;
@@ -34,7 +34,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
-#define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0 alpha:0.3]
+#define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0.f alpha:0.3f]
 
 // ---------------------------------------------------------------------------------------
 #pragma mark - Interface Extension
@@ -116,8 +116,8 @@ static CGFloat const kDisabledOpacity = 0.5f;
     _knobLayer = [CALayer layer];
     _knobLayer.frame = [self rectForKnob];
     _knobLayer.autoresizingMask = kCALayerHeightSizable;
-    _knobLayer.backgroundColor = [kKnobBackgroundColor  CGColor];
-    _knobLayer.shadowColor = [[NSColor blackColor] CGColor];
+    _knobLayer.backgroundColor = [kKnobBackgroundColor  its_CGColor];
+    _knobLayer.shadowColor = [[NSColor blackColor] its_CGColor];
     _knobLayer.shadowOffset = (CGSize){ .width = 0.f, .height = -2.f };
     _knobLayer.shadowRadius = 1.f;
     _knobLayer.shadowOpacity = 0.3f;
@@ -126,9 +126,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
     _knobInsideLayer = [CALayer layer];
     _knobInsideLayer.frame = _knobLayer.bounds;
     _knobInsideLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-    _knobInsideLayer.shadowColor = [[NSColor blackColor] CGColor];
+    _knobInsideLayer.shadowColor = [[NSColor blackColor] its_CGColor];
     _knobInsideLayer.shadowOffset = (CGSize){ .width = 0.f, .height = 0.f };
-    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] CGColor];
+    _knobInsideLayer.backgroundColor = [[NSColor whiteColor] its_CGColor];
     _knobInsideLayer.shadowRadius = 1.f;
     _knobInsideLayer.shadowOpacity = 0.35f;
     [_knobLayer addSublayer:_knobInsideLayer];
@@ -181,15 +181,15 @@ static CGFloat const kDisabledOpacity = 0.5f;
         // ------------------------------- Animate Border
         // The green part also animates, which looks kinda weird
         // We'll use the background-color for now
-        //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
+        //        _backgroundLayer.borderWidth = (YES || self.isActive || self.state) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
         if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self isOn])) {
-            _backgroundLayer.borderColor = [self.tintColor CGColor];
-            _backgroundLayer.backgroundColor = [self.tintColor CGColor];
+            _backgroundLayer.borderColor = [self.tintColor its_CGColor];
+            _backgroundLayer.backgroundColor = [self.tintColor its_CGColor];
         } else {
-            _backgroundLayer.borderColor = [kDisabledBorderColor CGColor];
-            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
+            _backgroundLayer.borderColor = [kDisabledBorderColor its_CGColor];
+            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor its_CGColor];
         }
         
         // ------------------------------- Animate Enabled-Disabled state
@@ -276,10 +276,10 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
     self.active = NO;
     
-    BOOL isOn = (![self hasDragged]) ? ![self isOn] : [self isDraggingTowardsOn];
-    BOOL invokeTargetAction = (isOn != [self isOn]);
+    BOOL state = (![self hasDragged]) ? ![self isOn] : [self isDraggingTowardsOn];
+    BOOL invokeTargetAction = (state != [self isOn]);
     
-    self.on = isOn;
+    self.on = state;
     if (invokeTargetAction) [self _invokeTargetAction];
     
     // Reset
@@ -323,27 +323,11 @@ static CGFloat const kDisabledOpacity = 0.5f;
 #pragma mark - Accessors
 // ----------------------------------------------------
 
-- (id)target {
-    return _target;
-}
-
-- (void)setTarget:(id)target {
-    _target = target;
-}
-
-- (SEL)action {
-    return _action;
-}
-
-- (void)setAction:(SEL)action {
-    _action = action;
-}
-
-- (void)setOn:(BOOL)on {
+- (void)setOn:(BOOL)on
+{
     if (_on != on) {
-		_on = on;
+        _on = on;
     }
-    
     [self reloadLayer];
 }
 
@@ -424,9 +408,13 @@ static CGFloat const kDisabledOpacity = 0.5f;
 	if ([attribute isEqualToString:NSAccessibilityRoleAttribute])
 		retVal = NSAccessibilityCheckBoxRole;
 	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-		retVal = [NSNumber numberWithInt:self.isOn];
+		retVal = [NSNumber numberWithInt:self.on];
 	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
-		retVal = [NSNumber numberWithBool:self.enabled];
+#ifdef COMPILE_FOR_LION
+        retVal = [NSNumber numberWithBool:self.isEnabled];
+#else
+        retVal = [NSNumber numberWithBool:self.enabled];
+#endif
 	else
 		retVal = [super accessibilityAttributeValue:attribute];
 	return retVal;
@@ -447,7 +435,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueAttribute]) {
-		BOOL invokeTargetAction = self.isOn != [value boolValue];
+		BOOL invokeTargetAction = self.on != [value boolValue];
 		self.on = [value boolValue];
 		if (invokeTargetAction) {
 			[self _invokeTargetAction];
@@ -480,6 +468,31 @@ static CGFloat const kDisabledOpacity = 0.5f;
 	else {
 		[super accessibilityPerformAction:actionString];
 	}
+}
+
+@end
+
+/**
+ *  Support for CGColor in Lion
+ */
+
+@implementation NSColor (CGColorExtends)
+
+- (CGColorRef)its_CGColor
+{
+    SEL selector = NSSelectorFromString(@"CGColor");
+    CGColorRef result;
+    if ([self respondsToSelector:selector]) {
+        IMP imp = [self methodForSelector:selector];
+        CGColorRef (*func)(id, SEL) = (void *)imp;
+        result = func(self, selector);
+    } else {
+        NSColorSpace *colorSpace = [self colorSpace];
+        CGFloat components[[[self colorSpace] numberOfColorComponents]];
+        [self getComponents:components];
+        result = (__bridge CGColorRef)(CFBridgingRelease(CGColorCreate([colorSpace CGColorSpace], components)));
+    }
+    return result;
 }
 
 @end
