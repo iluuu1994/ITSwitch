@@ -184,7 +184,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
         //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
         
         // ------------------------------- Animate Colors
-        if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self isOn])) {
+        if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self checked])) {
             _backgroundLayer.borderColor = [self.tintColor CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
@@ -230,7 +230,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
     CGFloat height = [self knobHeightForSize:_backgroundLayer.bounds.size];
     CGFloat width = ![self isActive] ? (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kGoldenRatio :
     (NSWidth(_backgroundLayer.bounds) - 2.f * kBorderLineWidth) * 1.f / kDecreasedGoldenRatio;
-    CGFloat x = ((![self hasDragged] && ![self isOn]) || (self.hasDragged && ![self isDraggingTowardsOn])) ?
+    CGFloat x = ((![self hasDragged] && ![self checked]) || (self.hasDragged && ![self isDraggingTowardsOn])) ?
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
@@ -276,10 +276,10 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
     self.active = NO;
     
-    BOOL isOn = (![self hasDragged]) ? ![self isOn] : [self isDraggingTowardsOn];
-    BOOL invokeTargetAction = (isOn != [self isOn]);
+    BOOL checked = (![self hasDragged]) ? ![self checked] : [self isDraggingTowardsOn];
+    BOOL invokeTargetAction = (checked != [self checked]);
     
-    self.on = isOn;
+    self.checked = checked;
     if (invokeTargetAction) [self _invokeTargetAction];
     
     // Reset
@@ -290,15 +290,15 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 - (void)moveLeft:(id)sender {
-	if ([self isOn]) {
-		self.on = NO;
+	if ([self checked]) {
+		self.checked = NO;
 		[self _invokeTargetAction];
 	}
 }
 
 - (void)moveRight:(id)sender {
-	if ([self isOn] == NO) {
-		self.on = YES;
+	if ([self checked] == NO) {
+		self.checked = YES;
 		[self _invokeTargetAction];
 	}
 }
@@ -310,7 +310,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 		
 		if (ch == 49) //Space
 		{
-			self.on = ![self isOn];
+			self.checked = ![self checked];
 			[self _invokeTargetAction];
 			handledKeyEquivalent = YES;
 		}
@@ -339,9 +339,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
     _action = action;
 }
 
-- (void)setOn:(BOOL)on {
-    if (_on != on) {
-		_on = on;
+- (void)setChecked:(BOOL)checked {
+    if (_checked != checked) {
+		_checked = checked;
     }
     
     [self reloadLayer];
@@ -424,7 +424,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 	if ([attribute isEqualToString:NSAccessibilityRoleAttribute])
 		retVal = NSAccessibilityCheckBoxRole;
 	else if ([attribute isEqualToString:NSAccessibilityValueAttribute])
-		retVal = [NSNumber numberWithInt:self.isOn];
+		retVal = [NSNumber numberWithInt:self.checked];
 	else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute])
 		retVal = [NSNumber numberWithBool:self.enabled];
 	else
@@ -447,8 +447,8 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueAttribute]) {
-		BOOL invokeTargetAction = self.isOn != [value boolValue];
-		self.on = [value boolValue];
+		BOOL invokeTargetAction = self.checked != [value boolValue];
+		self.checked = [value boolValue];
 		if (invokeTargetAction) {
 			[self _invokeTargetAction];
 		}
@@ -474,7 +474,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)accessibilityPerformAction:(NSString *)actionString {
 	if ([actionString isEqualToString:NSAccessibilityPressAction]) {
-		self.on = ![self isOn];
+		self.checked = ![self checked];
 		[self _invokeTargetAction];
 	}
 	else {
