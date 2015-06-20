@@ -14,4 +14,6 @@
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet ITSwitch *itSwitch;
 
+@property (assign) BOOL bindableFlag;
+
 @end

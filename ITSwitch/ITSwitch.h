@@ -17,7 +17,7 @@ IB_DESIGNABLE
 /**
  *  @property on - Gets or sets the switches state
  */
-@property (nonatomic, getter=isOn) IBInspectable BOOL on;
+@property (nonatomic, assign) IBInspectable BOOL checked;
 
 /**
  *  @property tintColor - Gets or sets the switches tint
