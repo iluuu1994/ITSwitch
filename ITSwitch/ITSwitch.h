@@ -15,7 +15,7 @@ IB_DESIGNABLE
 @interface ITSwitch : NSControl
 
 /**
- *  @property on - Gets or sets the switches state
+ *  @property checked - Gets or sets the switches state
  */
 @property (nonatomic, assign) IBInspectable BOOL checked;
 
