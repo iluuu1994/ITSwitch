@@ -15,8 +15,15 @@ You can create an IBAction and simply connect the two in Interface Builder.
 Additionally, you can use these two properties:
 
 ```objc
-@property (nonatomic, getter = isOn) BOOL on;
-@property (nonatomic, strong) NSColor *tintColor;
+/**
+ *  @property checked - Gets or sets the switches state
+ */
+@property (nonatomic, assign) IBInspectable BOOL checked;
+
+/**
+ *  @property tintColor - Gets or sets the switches tint
+ */
+@property (nonatomic, strong) IBInspectable NSColor *tintColor;
 ```
 
 Since `ITSwitch` uses its `CALayer` to draw a drop-shadow, you should also layer-back it's superview.
