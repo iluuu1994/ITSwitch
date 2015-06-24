@@ -12,7 +12,7 @@
 		65954EF71B3971100058CAED /* ITSwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65954EF61B3971100058CAED /* ITSwitchTests.swift */; };
 		65954EFA1B3971100058CAED /* ITSwitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65954EE31B3971100058CAED /* ITSwitch.framework */; };
 		65954EFB1B3971100058CAED /* ITSwitch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 65954EE31B3971100058CAED /* ITSwitch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		65954F031B3971400058CAED /* ITSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D13E2C189D08A30019E3B7 /* ITSwitch.h */; };
+		65954F031B3971400058CAED /* ITSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 91D13E2C189D08A30019E3B7 /* ITSwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		65954F041B3971490058CAED /* ITSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D13E2D189D08A30019E3B7 /* ITSwitch.m */; };
 		91D13E2E189D08A30019E3B7 /* ITSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 91D13E2D189D08A30019E3B7 /* ITSwitch.m */; };
 		91DEA3AC189D0B2000F5713B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DEA3AB189D0B2000F5713B /* QuartzCore.framework */; };
@@ -794,6 +794,7 @@
 				65954EFD1B3971100058CAED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		65954F021B3971100058CAED /* Build configuration list for PBXNativeTarget "ITSwitchTests" */ = {
 			isa = XCConfigurationList;
@@ -802,6 +803,7 @@
 				65954EFF1B3971100058CAED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		91F4F42E189D085F00023528 /* Build configuration list for PBXProject "ITSwitch-Demo" */ = {
 			isa = XCConfigurationList;
