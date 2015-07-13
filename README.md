@@ -8,9 +8,9 @@ ITSwitch
 Usage
 -----
 
-Not much to it, simply set the custom class of a `NSView` to `ITSwitch` in Interface Builder.
-You can create an IBAction and simply connect the two in Interface Builder.
-Or you can use Cocoa Bindings to directly bind it to one of your properties
+Not much to it, simply set the custom class of a `NSView` to `ITSwitch` in Interface Builder.  
+You can create an IBAction and simply connect the two in Interface Builder.  
+Or you can use Cocoa Bindings to directly bind it to one of your properties:
 
 ```objc
 [switch bind:@"checked" toObject:self withKeyPath:@"prop" options:nil];
