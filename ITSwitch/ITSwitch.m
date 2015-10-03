@@ -274,7 +274,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
-	if (!self.active) return;
+    if (!self.active) return;
     if (!self.isEnabled) return;
 
     self.active = NO;
