@@ -372,15 +372,8 @@ static CGFloat const kDisabledOpacity = 0.5f;
 // -----------------------------------
 
 - (void)_invokeTargetAction {
-    if (self.target && self.action) {
-        NSMethodSignature *signature = [[self.target class] instanceMethodSignatureForSelector:self.action];
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-        [invocation setTarget:self.target];
-        [invocation setSelector:self.action];
-        [invocation setArgument:(void *)&self atIndex:2];
-        
-        [invocation invoke];
-    }
+    if (self.action)
+        [NSApp sendAction:self.action to:self.target from:self];
 }
 
 // -----------------------------------
