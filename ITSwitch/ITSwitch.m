@@ -31,7 +31,6 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 #define kKnobBackgroundColor [NSColor colorWithCalibratedWhite:1.f alpha:1.f]
 
-#define kDisabledBorderColor [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor [NSColor clearColor]
 #define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
 #define kInactiveBackgroundColor [NSColor colorWithCalibratedWhite:0 alpha:0.3]
@@ -94,6 +93,11 @@ static CGFloat const kDisabledOpacity = 0.5f;
 - (void)setUp {
     // The Switch is enabled per default
     self.enabled = YES;
+    
+    // Set the default border color if not present
+    if (!self.disabledBorderColor) {
+        self.disabledBorderColor = [NSColor colorWithCalibratedWhite:0.f alpha:0.2f];
+    }
     
     // Set up the layer hierarchy
     [self setUpLayers];
@@ -190,7 +194,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
             _backgroundLayer.borderColor = [self.tintColor CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
-            _backgroundLayer.borderColor = [kDisabledBorderColor CGColor];
+            _backgroundLayer.borderColor = [self.disabledBorderColor CGColor];
             _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
         }
         
@@ -358,6 +362,12 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)setTintColor:(NSColor *)tintColor {
     _tintColor = tintColor;
+    
+    [self reloadLayer];
+}
+
+- (void)setDisabledBorderColor:(NSColor *)disabledBorderColor {
+    _disabledBorderColor = disabledBorderColor;
     
     [self reloadLayer];
 }
