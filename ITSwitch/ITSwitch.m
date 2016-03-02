@@ -65,7 +65,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
 // ---------------------------------------------------------------------------------------
 
 @implementation ITSwitch
-@synthesize tintColor = _tintColor;
+@synthesize tintColor = _tintColor, disabledBorderColor = _disabledBorderColor;
 
 
 
@@ -190,7 +190,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
             _backgroundLayer.borderColor = [self.tintColor CGColor];
             _backgroundLayer.backgroundColor = [self.tintColor CGColor];
         } else {
-            _backgroundLayer.borderColor = [kDisabledBorderColor CGColor];
+            _backgroundLayer.borderColor = [self.disabledBorderColor CGColor];
             _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
         }
         
@@ -358,6 +358,18 @@ static CGFloat const kDisabledOpacity = 0.5f;
 
 - (void)setTintColor:(NSColor *)tintColor {
     _tintColor = tintColor;
+    
+    [self reloadLayer];
+}
+
+- (NSColor *)disabledBorderColor {
+    if (!_disabledBorderColor) return kDisabledBorderColor;
+    
+    return _disabledBorderColor;
+}
+
+- (void)setDisabledBorderColor:(NSColor *)disabledBorderColor {
+    _disabledBorderColor = disabledBorderColor;
     
     [self reloadLayer];
 }

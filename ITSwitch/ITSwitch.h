@@ -24,4 +24,9 @@ IB_DESIGNABLE
  */
 @property (nonatomic, strong) IBInspectable NSColor *tintColor;
 
+/**
+ *  @property disabledBorderColor - Define the switch's border color for disabled state.
+ */
+@property (nonatomic, strong) IBInspectable NSColor *disabledBorderColor;
+
 @end
