@@ -177,6 +177,18 @@ static CGFloat const kDisabledOpacity = 0.5f;
 // ----------------------------------------------------
 
 - (void)reloadLayer {
+    [self reloadLayerAnimated:NO];
+}
+
+- (void)reloadLayerAnimated:(BOOL)animated {
+    
+    [CATransaction begin];
+    [CATransaction setAnimationDuration: animated ? kAnimationDuration : 0.0];
+    
+    if (![self hasDragged]) {
+        CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
+        [CATransaction setAnimationTimingFunction:function];
+    }
     
     if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self checked])) {
         _backgroundLayer.borderColor = [self.tintColor CGColor];
@@ -190,21 +202,6 @@ static CGFloat const kDisabledOpacity = 0.5f;
     
     self.knobLayer.frame = [self rectForKnob];
     self.knobInsideLayer.frame = self.knobLayer.bounds;
-}
-
-- (void)reloadLayerAnimated {
-    
-    // Wrap reloadLayerWithoutAnimation method around CATransaction
-    
-    [CATransaction begin];
-    [CATransaction setAnimationDuration:kAnimationDuration];
-    
-    if (![self hasDragged]) {
-        CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
-        [CATransaction setAnimationTimingFunction:function];
-    }
-    
-    [self reloadLayer];
     
     [CATransaction commit];
 }
@@ -347,9 +344,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
     }
     
     if (animated) {
-        [self reloadLayerAnimated];
+        [self reloadLayerAnimated:YES];
     } else {
-        [self reloadLayer];
+        [self reloadLayerAnimated:NO];
     }
 }
 
