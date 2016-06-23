@@ -136,7 +136,7 @@ static CGFloat const kDisabledOpacity = 0.5f;
     [_knobLayer addSublayer:_knobInsideLayer];
     
     // Initial
-    [self reloadLayerSize];
+//    [self reloadLayerSize];
     [self reloadLayer];
 }
 
@@ -177,50 +177,45 @@ static CGFloat const kDisabledOpacity = 0.5f;
 // ----------------------------------------------------
 
 - (void)reloadLayer {
+    
+    if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self checked])) {
+        _backgroundLayer.borderColor = [self.tintColor CGColor];
+        _backgroundLayer.backgroundColor = [self.tintColor CGColor];
+    } else {
+        _backgroundLayer.borderColor = [self.disabledBorderColor CGColor];
+        _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
+    }
+    
+    _rootLayer.opacity = (self.isEnabled) ? kEnabledOpacity : kDisabledOpacity;
+    
+    self.knobLayer.frame = [self rectForKnob];
+    self.knobInsideLayer.frame = self.knobLayer.bounds;
+}
+
+- (void)reloadLayerAnimated {
+    
+    // Wrap reloadLayerWithoutAnimation method around CATransaction
+    
     [CATransaction begin];
     [CATransaction setAnimationDuration:kAnimationDuration];
-    {
-        // ------------------------------- Animate Border
-        // The green part also animates, which looks kinda weird
-        // We'll use the background-color for now
-        //        _backgroundLayer.borderWidth = (YES || self.isActive || self.isOn) ? NSHeight(_backgroundLayer.bounds) / 2 : kBorderLineWidth;
-        
-        // ------------------------------- Animate Colors
-        if (([self hasDragged] && [self isDraggingTowardsOn]) || (![self hasDragged] && [self checked])) {
-            _backgroundLayer.borderColor = [self.tintColor CGColor];
-            _backgroundLayer.backgroundColor = [self.tintColor CGColor];
-        } else {
-            _backgroundLayer.borderColor = [self.disabledBorderColor CGColor];
-            _backgroundLayer.backgroundColor = [kDisabledBackgroundColor CGColor];
-        }
-        
-        // ------------------------------- Animate Enabled-Disabled state
-        _rootLayer.opacity = (self.isEnabled) ? kEnabledOpacity : kDisabledOpacity;
-
-        // ------------------------------- Animate Frame
-        if (![self hasDragged]) {
-            CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
-            [CATransaction setAnimationTimingFunction:function];
-        }
-        
-        self.knobLayer.frame = [self rectForKnob];
-        self.knobInsideLayer.frame = self.knobLayer.bounds;
+    
+    if (![self hasDragged]) {
+        CAMediaTimingFunction *function = [CAMediaTimingFunction functionWithControlPoints:0.25f :1.5f :0.5f :1.f];
+        [CATransaction setAnimationTimingFunction:function];
     }
+    
+    [self reloadLayer];
+    
     [CATransaction commit];
 }
 
 - (void)reloadLayerSize {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    {
-        self.knobLayer.frame = [self rectForKnob];
-        self.knobInsideLayer.frame = self.knobLayer.bounds;
-        
-        [_backgroundLayer setCornerRadius:_backgroundLayer.bounds.size.height / 2.f];
-        [_knobLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
-        [_knobInsideLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
-    }
-    [CATransaction commit];
+    self.knobLayer.frame = [self rectForKnob];
+    self.knobInsideLayer.frame = self.knobLayer.bounds;
+    
+    [_backgroundLayer setCornerRadius:_backgroundLayer.bounds.size.height / 2.f];
+    [_knobLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
+    [_knobInsideLayer setCornerRadius:_knobLayer.bounds.size.height / 2.f];
 }
 
 - (CGFloat)knobHeightForSize:(NSSize)size
@@ -342,12 +337,20 @@ static CGFloat const kDisabledOpacity = 0.5f;
 }
 
 - (void)setChecked:(BOOL)checked {
+    [self setChecked:checked animated:YES];
+}
+
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated {
     if (_checked != checked) {
-		_checked = checked;
+        _checked = checked;
         [self propagateValue:@(checked) forBinding:@"checked"];
     }
     
-    [self reloadLayer];
+    if (animated) {
+        [self reloadLayerAnimated];
+    } else {
+        [self reloadLayer];
+    }
 }
 
 - (NSColor *)tintColor {

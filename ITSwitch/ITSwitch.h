@@ -29,4 +29,6 @@ IB_DESIGNABLE
  */
 @property (nonatomic, strong) IBInspectable NSColor *disabledBorderColor;
 
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated;
+
 @end
