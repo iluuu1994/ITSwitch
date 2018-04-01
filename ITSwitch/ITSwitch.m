@@ -106,6 +106,9 @@ static CGFloat const kDisabledOpacity = 0.5f;
     self.layer = _rootLayer;
     self.wantsLayer = YES;
     
+    // Allow shadow to flow over bounds of the layer
+    _rootLayer.masksToBounds = NO;
+
     // Background layer
     _backgroundLayer = [CALayer layer];
     _backgroundLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
