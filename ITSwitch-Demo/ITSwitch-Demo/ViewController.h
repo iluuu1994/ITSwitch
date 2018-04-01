@@ -1,5 +1,5 @@
 //
-//  main.m
+//  ViewController.h
 //  ITSwitch-Demo
 //
 //  Created by Ilija Tovilo on 01.04.18.
@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-int main(int argc, const char * argv[]) {
-    return NSApplicationMain(argc, argv);
-}
+@interface ViewController : NSViewController
+
+
+@end
+
